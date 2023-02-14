@@ -110,7 +110,7 @@ function App() {
           or refresh.
           <br />
           Website's source code is available{" "}
-          <a href="#" target="_blank">
+          <a href="https://github.com/FedeMontanari/get-location" target="_blank">
             here
           </a>
           .

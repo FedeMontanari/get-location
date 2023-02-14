@@ -10,6 +10,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
+import { Icon } from "leaflet";
 
 function App() {
   const [currentLocation, setCurrentLocation] = useState({
@@ -19,49 +20,26 @@ function App() {
   });
   const [isLocation, setIsLocation] = useState(false);
 
-  // function handlePermission() {
-  //   function revealPosition(pos) {
-  //     setCurrentLocation({
-  //       lat: pos.coords.latitude,
-  //       lng: pos.coords.longitude,
-  //       acc: 3842,
-  //     });
-  //     return;
-  //   }
-
-  //   function deniedPosition(pos) {
-  //     alert(pos.message);
-  //   }
-
-  //   navigator.permissions.query({ name: "geolocation" }).then((result) => {
-  //     result.onchange = () => {
-  //       report(result.state);
-  //     };
-  //     switch (result.state) {
-  //       case "prompt":
-  //         navigator.geolocation.getCurrentPosition(
-  //           revealPosition,
-  //           deniedPosition
-  //         );
-  //         return;
-  //       case "granted":
-  //         return navigator.geolocation.getCurrentPosition(
-  //           revealPosition,
-  //           deniedPosition
-  //         );
-  //       case "denied":
-  //         alert("User denied Geolocation");
-  //         return;
-  //       default:
-  //         break;
-  //     }
-  //   });
-  // }
+  const icon = new Icon({
+    iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png",
+    iconRetinaUrl:
+      "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon-2x.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    tooltipAnchor: [16, -28],
+    shadowSize: [41, 41],
+  });
 
   function LocationMarker() {
     const map = useMapEvents({
       click() {
         map.locate({ enableHighAccuracy: true });
+        map.fitBounds([
+          currentLocation.lat - currentLocation.acc,
+          currentLocation.lng - currentLocation.acc,
+        ]);
       },
       locationfound(e) {
         setIsLocation(true);
@@ -75,7 +53,7 @@ function App() {
     });
 
     return !isLocation ? null : (
-      <Marker position={[currentLocation.lat, currentLocation.lng]}>
+      <Marker position={[currentLocation.lat, currentLocation.lng]} icon={icon}>
         <FeatureGroup pathOptions={{ fillColor: "blue" }}>
           <Circle
             center={[currentLocation.lat, currentLocation.lng]}

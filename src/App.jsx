@@ -36,10 +36,6 @@ function App() {
     const map = useMapEvents({
       click() {
         map.locate({ enableHighAccuracy: true });
-        map.fitBounds([
-          currentLocation.lat - currentLocation.acc,
-          currentLocation.lng - currentLocation.acc,
-        ]);
       },
       locationfound(e) {
         setIsLocation(true);
@@ -48,7 +44,19 @@ function App() {
           lng: e.longitude,
           acc: e.accuracy,
         });
-        map.flyTo(e.latlng, map.getZoom());
+        let accCoords =
+          Number(currentLocation.acc.toString().split(".")[0]) /
+          getDecimals(currentLocation.acc);
+        let corner1 = [
+          currentLocation.lat - accCoords,
+          currentLocation.lng - accCoords,
+        ];
+        let corner2 = [
+          currentLocation.lat + accCoords,
+          currentLocation.lng + accCoords,
+        ];
+        console.log(corner1, corner2);
+        map.flyToBounds([corner1, corner2]);
       },
     });
 
@@ -67,6 +75,26 @@ function App() {
         </FeatureGroup>
       </Marker>
     );
+  }
+
+  function getDecimals(acc) {
+    let stringify = acc.toString().split(".")[0];
+    switch (stringify.length) {
+      case 1:
+        return 1000000;
+      case 2:
+        return 100000;
+      case 3:
+        return 100000;
+      case 4:
+        return 100000;
+      case 5:
+        return 10000;
+      case 6:
+        return 1000;
+      default:
+        return;
+    }
   }
 
   return (
@@ -88,7 +116,10 @@ function App() {
           or refresh.
           <br />
           Website's source code is available{" "}
-          <a href="https://github.com/FedeMontanari/get-location" target="_blank">
+          <a
+            href="https://github.com/FedeMontanari/get-location"
+            target="_blank"
+          >
             here
           </a>
           .

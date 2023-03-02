@@ -31,7 +31,7 @@ function App() {
 
   function LocationMarker() {
     const map = useMapEvents({
-      click() {
+      click(e) {
         map.locate({ enableHighAccuracy: true });
       },
       locationfound(e) {
@@ -56,7 +56,7 @@ function App() {
         setBorder([corner1, corner2]);
         map.flyTo(currentLocation);
       },
-      moveend() {
+      moveend(e) {
         map.fitBounds(border);
       },
     });

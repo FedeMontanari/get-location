@@ -57,7 +57,7 @@ function App() {
         map.flyTo(currentLocation);
       },
       moveend(e) {
-        map.fitBounds(border);
+        map.flyToBounds(border);
       },
     });
 

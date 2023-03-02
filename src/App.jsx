@@ -13,12 +13,9 @@ import { useState } from "react";
 import { Icon } from "leaflet";
 
 function App() {
-  const [currentLocation, setCurrentLocation] = useState({
-    lat: 51.5,
-    lng: -0.1,
-    acc: 0,
-  });
+  const [currentLocation, setCurrentLocation] = useState({});
   const [isLocation, setIsLocation] = useState(false);
+  const [border, setBorder] = useState([]);
 
   const icon = new Icon({
     iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
@@ -51,12 +48,16 @@ function App() {
           currentLocation.lat - accCoords,
           currentLocation.lng - accCoords,
         ];
+
         let corner2 = [
           currentLocation.lat + accCoords,
           currentLocation.lng + accCoords,
         ];
-        console.log(corner1, corner2);
-        map.flyToBounds([corner1, corner2]);
+        setBorder([corner1, corner2]);
+        map.flyTo(currentLocation);
+      },
+      moveend() {
+        map.fitBounds(border);
       },
     });
 
@@ -102,7 +103,11 @@ function App() {
       <h1 style={{ margin: 0 }}>Get your current device's location!</h1>
       <h4>Click on the map to get your location</h4>
       <div className="map" id="map">
-        <MapContainer center={currentLocation} zoom={12} scrollWheelZoom={true}>
+        <MapContainer
+          center={currentLocation}
+          zoom={12}
+          scrollWheelZoom={true}
+        >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
